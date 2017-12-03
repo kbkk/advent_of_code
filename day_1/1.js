@@ -1,17 +1,12 @@
 const fs = require('fs');
 const input = fs.readFileSync('./input', {encoding: 'utf-8'});
 
-let captcha = 0;
-
 const numbers = [...input]
-    .map(v => +v);
+    .map(v => +v)
+    .map((v, i, a) => {
+      const nextIndex = i+2 > a.length ? 0 : i+1;
+      return a[i] === a[nextIndex] ? a[i] : 0;
+    })
+    .reduce((a, b) => a+b);
 
-const numbersMatch = (a, b) => numbers[a] === numbers[b] ? numbers[a] : 0;
-
-captcha += numbersMatch(0, numbers.length - 1);
-
-for(let i = 1; i < numbers.length; i++) {
-  captcha += numbersMatch(i - 1, i);
-}
-
-console.log(captcha);
+console.log(numbers);
