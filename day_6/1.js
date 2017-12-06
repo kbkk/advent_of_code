@@ -5,12 +5,23 @@ const banks = fs
     .split('\t')
     .map(Number);
 
-const bankHistory = [[...banks]];
+const banksHistory = {};
+
+function hashBanks(banks) {
+  let str = '';
+
+  for(let i = 0; i < banks.length; i++)
+    str += String.fromCharCode(banks[i]);
+
+  return str;
+}
 
 function calculateSteps() {
   let steps = 0;
 
   while (true) {
+
+    banksHistory[hashBanks(banks)] = true;
     steps++;
 
     const busiestBank = banks.indexOf(Math.max(...banks));
@@ -23,24 +34,12 @@ function calculateSteps() {
       remainder--;
     }
 
-    for (let bankIndex = 0; bankIndex < bankHistory.length; bankIndex++) {
-      const bank = bankHistory[bankIndex];
-      let isEqual = true;
-
-      for (let i = 0; i < bank.length; i++) {
-        if (bank[i] !== banks[i]) {
-          isEqual = false;
-          break;
-        }
-      }
-
-      if (isEqual) return steps;
-    }
-    bankHistory.push([...banks]);
+    if(banksHistory[hashBanks(banks)])
+      return steps;
   }
 }
 
 console.log(calculateSteps());
 /*
-console.log(Math.max(...bankHistory
+console.log(Math.max(...banksHistory
     .map(row => Math.max(...row))));*/
